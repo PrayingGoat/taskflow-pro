@@ -23,6 +23,18 @@ services:
     volumes:
       - redis_data:/data
 
+  # API Backend simple
+  api:
+    build: ./backend/simple-api
+    container_name: taskflow-api
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - postgres
+      - redis
+
   # Frontend simple avec Nginx
   frontend:
     image: nginx:alpine
@@ -32,6 +44,7 @@ services:
     volumes:
       - ./frontend:/usr/share/nginx/html
     depends_on:
+      - api
       - postgres
       - redis
 

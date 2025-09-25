@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow Pro - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar-brand {
+            font-weight: 700;
+        }
+        .stats-card {
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        .stats-card:hover {
+            transform: translateY(-2px);
+        }
+        .project-card {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            background: white;
+            margin-bottom: 1rem;
+            transition: box-shadow 0.2s ease;
+        }
+        .project-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .loading {
+            text-align: center;
+            padding: 2rem;
+        }
+        .error {
+            color: #dc3545;
+            text-align: center;
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-tasks me-2"></i>
+                TaskFlow Pro
+            </a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text">
+                    <i class="fas fa-user me-2"></i>
+                    <span id="userName">Chargement...</span>
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <div class="container-fluid py-4">
+        <!-- En-tête -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h3 mb-1">Dashboard</h1>
+                        <p class="text-muted mb-0">Bienvenue sur TaskFlow Pro !</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary" onclick="createProject()">
+                            <i class="fas fa-plus me-2"></i>
+                            Nouveau Projet
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistiques -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card stats-card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-primary text-white rounded-circle p-3 me-3">
+                                <i class="fas fa-project-diagram"></i>
+                            </div>
+                            <div>
+                                <h6 class="card-title mb-0">Projets Actifs</h6>
+                                <h3 class="mb-0" id="activeProjects">-</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-success text-white rounded-circle p-3 me-3">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div>
+                                <h6 class="card-title mb-0">Tâches Terminées</h6>
+                                <h3 class="mb-0" id="completedTasks">-</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-warning text-white rounded-circle p-3 me-3">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div>
+                                <h6 class="card-title mb-0">En Cours</h6>
+                                <h3 class="mb-0" id="inProgressTasks">-</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-danger text-white rounded-circle p-3 me-3">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div>
+                                <h6 class="card-title mb-0">En Retard</h6>
+                                <h3 class="mb-0" id="overdueTasks">-</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projets -->
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Projets Récents</h5>
+                        <button class="btn btn-sm btn-outline-primary" onclick="refreshProjects()">
+                            <i class="fas fa-sync-alt me-1"></i>
+                            Actualiser
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="projectsLoading" class="loading">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Chargement...</span>
+                            </div>
+                            <p class="mt-2">Chargement des projets...</p>
+                        </div>
+                        <div id="projectsError" class="error" style="display: none;">
+                            <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
+                            <p>Erreur lors du chargement des projets</p>
+                            <button class="btn btn-primary" onclick="loadProjects()">Réessayer</button>
+                        </div>
+                        <div id="projectsList"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tâches urgentes -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Tâches Urgentes</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="urgentTasksLoading" class="loading">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Chargement...</span>
+                            </div>
+                        </div>
+                        <div id="urgentTasksList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_BASE = 'http://localhost:8080/api';
+
+        // Charger les données au démarrage
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUser();
+            loadStats();
+            loadProjects();
+            loadUrgentTasks();
+        });
+
+        // Charger les informations utilisateur
+        async function loadUser() {
+            try {
+                const response = await fetch(`${API_BASE}/users/me`);
+                const user = await response.json();
+                document.getElementById('userName').textContent = `${user.firstName} ${user.lastName}`;
+            } catch (error) {
+                console.error('Erreur lors du chargement de l\'utilisateur:', error);
+                document.getElementById('userName').textContent = 'Utilisateur';
+            }
+        }
+
+        // Charger les statistiques
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_BASE}/stats`);
+                const stats = await response.json();
+                
+                document.getElementById('activeProjects').textContent = stats.activeProjects;
+                document.getElementById('completedTasks').textContent = stats.completedTasks;
+                document.getElementById('inProgressTasks').textContent = stats.inProgressTasks;
+                document.getElementById('overdueTasks').textContent = stats.overdueTasks;
+            } catch (error) {
+                console.error('Erreur lors du chargement des statistiques:', error);
+            }
+        }
+
+        // Charger les projets
+        async function loadProjects() {
+            const loadingEl = document.getElementById('projectsLoading');
+            const errorEl = document.getElementById('projectsError');
+            const listEl = document.getElementById('projectsList');
+
+            loadingEl.style.display = 'block';
+            errorEl.style.display = 'none';
+            listEl.innerHTML = '';
+
+            try {
+                const response = await fetch(`${API_BASE}/projects`);
+                const projects = await response.json();
+                
+                loadingEl.style.display = 'none';
+                
+                if (projects.length === 0) {
+                    listEl.innerHTML = `
+                        <div class="text-center py-4">
+                            <i class="fas fa-project-diagram fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">Aucun projet pour le moment</p>
+                            <button class="btn btn-primary" onclick="createProject()">
+                                Créer votre premier projet
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    listEl.innerHTML = projects.map(project => `
+                        <div class="project-card">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="rounded-circle me-2" style="width: 12px; height: 12px; background-color: ${project.color}"></div>
+                                <h6 class="mb-0 flex-grow-1">${project.name}</h6>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="editProject(${project.id})">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <p class="text-muted mb-2">${project.description}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="badge bg-light text-dark me-2">
+                                        <i class="fas fa-tasks me-1"></i>
+                                        ${project.taskCount} tâches
+                                    </span>
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check me-1"></i>
+                                        ${project.completedTaskCount} terminées
+                                    </span>
+                                </div>
+                                <small class="text-muted">${project.progress}% terminé</small>
+                            </div>
+                            <div class="progress mt-2" style="height: 6px;">
+                                <div class="progress-bar" style="width: ${project.progress}%"></div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement des projets:', error);
+                loadingEl.style.display = 'none';
+                errorEl.style.display = 'block';
+            }
+        }
+
+        // Charger les tâches urgentes
+        async function loadUrgentTasks() {
+            const loadingEl = document.getElementById('urgentTasksLoading');
+            const listEl = document.getElementById('urgentTasksList');
+
+            try {
+                const response = await fetch(`${API_BASE}/tasks/urgent`);
+                const tasks = await response.json();
+                
+                loadingEl.style.display = 'none';
+                
+                if (tasks.length === 0) {
+                    listEl.innerHTML = `
+                        <div class="text-center py-3">
+                            <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                            <p class="text-muted mb-0">Aucune tâche urgente</p>
+                        </div>
+                    `;
+                } else {
+                    listEl.innerHTML = tasks.map(task => `
+                        <div class="d-flex align-items-start mb-3">
+                            <div class="me-2 mt-1">
+                                <div class="rounded-circle ${getPriorityClass(task.priority)}" style="width: 8px; height: 8px;"></div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">${task.title}</h6>
+                                <p class="text-muted mb-1">${task.description}</p>
+                                <div class="d-flex justify-content-between">
+                                    <small class="text-muted">${task.assignee}</small>
+                                    <span class="badge ${getStatusClass(task.status)}">${getStatusText(task.status)}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement des tâches urgentes:', error);
+                loadingEl.style.display = 'none';
+                listEl.innerHTML = '<p class="text-muted">Erreur lors du chargement</p>';
+            }
+        }
+
+        // Fonctions utilitaires
+        function getPriorityClass(priority) {
+            const classes = {
+                'HIGH': 'bg-danger',
+                'MEDIUM': 'bg-warning',
+                'LOW': 'bg-success'
+            };
+            return classes[priority] || 'bg-secondary';
+        }
+
+        function getStatusClass(status) {
+            const classes = {
+                'TODO': 'bg-secondary',
+                'IN_PROGRESS': 'bg-warning',
+                'COMPLETED': 'bg-success',
+                'CANCELLED': 'bg-danger'
+            };
+            return classes[status] || 'bg-secondary';
+        }
+
+        function getStatusText(status) {
+            const texts = {
+                'TODO': 'À faire',
+                'IN_PROGRESS': 'En cours',
+                'COMPLETED': 'Terminée',
+                'CANCELLED': 'Annulée'
+            };
+            return texts[status] || status;
+        }
+
+        // Actions
+        function createProject() {
+            alert('Fonctionnalité de création de projet - Démonstration API');
+        }
+
+        function editProject(id) {
+            alert(`Édition du projet ${id} - Démonstration API`);
+        }
+
+        function refreshProjects() {
+            loadProjects();
+        }
+    </script>
+</body>
+</html>
