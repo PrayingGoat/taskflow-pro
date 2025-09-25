@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow Pro - Plateforme de Gestion de Projets</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .hero-section {
+            padding: 100px 0;
+            color: white;
+            text-align: center;
+        }
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        .tech-badge {
+            display: inline-block;
+            background: #007bff;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin: 5px;
+            font-size: 0.9rem;
+        }
+        .stats-section {
+            background: white;
+            padding: 60px 0;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+        }
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-transparent">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-tasks me-2"></i>
+                TaskFlow Pro
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Fonctionnalités</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tech">Technologies</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#demo">Démo</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-4">TaskFlow Pro</h1>
+            <p class="lead mb-4">Plateforme complète de gestion de projets et collaboration d'équipe</p>
+            <p class="mb-5">Développée avec Java/Spring Boot, PHP/Laravel, C#/.NET Core et Vue.js</p>
+            <button class="btn btn-light btn-lg me-3" onclick="startDemo()">
+                <i class="fas fa-play me-2"></i>
+                Démarrer la Démo
+            </button>
+            <button class="btn btn-outline-light btn-lg" onclick="showCode()">
+                <i class="fas fa-code me-2"></i>
+                Voir le Code
+            </button>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Fonctionnalités Principales</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="text-center mb-3">
+                            <i class="fas fa-project-diagram fa-3x text-primary"></i>
+                        </div>
+                        <h4>Gestion de Projets</h4>
+                        <p>Créez et organisez vos projets avec des tableaux Kanban interactifs. Gérez les équipes et les permissions.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="text-center mb-3">
+                            <i class="fas fa-users fa-3x text-success"></i>
+                        </div>
+                        <h4>Collaboration Temps Réel</h4>
+                        <p>Chat intégré, partage de fichiers, commentaires et notifications en temps réel pour une collaboration efficace.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="text-center mb-3">
+                            <i class="fas fa-chart-line fa-3x text-warning"></i>
+                        </div>
+                        <h4>Analytics & Reporting</h4>
+                        <p>Dashboard avec métriques en temps réel, graphiques de progression et rapports d'activité exportables.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technologies Section -->
+    <section id="tech" class="stats-section">
+        <div class="container">
+            <h2 class="text-center mb-5">Technologies Utilisées</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Backend</h4>
+                    <span class="tech-badge">Java 17</span>
+                    <span class="tech-badge">Spring Boot 3.2</span>
+                    <span class="tech-badge">PHP 8.2</span>
+                    <span class="tech-badge">Laravel 10</span>
+                    <span class="tech-badge">C# 11</span>
+                    <span class="tech-badge">.NET Core 7</span>
+                    <span class="tech-badge">Node.js</span>
+                    <span class="tech-badge">Express.js</span>
+                </div>
+                <div class="col-md-6">
+                    <h4>Frontend & Infrastructure</h4>
+                    <span class="tech-badge">Vue.js 3</span>
+                    <span class="tech-badge">TypeScript</span>
+                    <span class="tech-badge">Bootstrap 5</span>
+                    <span class="tech-badge">PostgreSQL</span>
+                    <span class="tech-badge">MongoDB</span>
+                    <span class="tech-badge">Redis</span>
+                    <span class="tech-badge">Docker</span>
+                    <span class="tech-badge">Nginx</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-5" style="background: #f8f9fa;">
+        <div class="container">
+            <h2 class="text-center mb-5">Métriques de Performance</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-number">200ms</div>
+                        <p>Temps de réponse API</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-number">99.9%</div>
+                        <p>Disponibilité</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-number">1000+</div>
+                        <p>Utilisateurs simultanés</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-number">24/7</div>
+                        <p>Monitoring</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Démonstration Interactive</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Architecture du Système</h4>
+                    <div class="card">
+                        <div class="card-body">
+                            <h6>Microservices Architecture</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>API Spring Boot (Java)</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Services Laravel (PHP)</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Microservices .NET Core (C#)</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Frontend Vue.js</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h4>Fonctionnalités Démo</h4>
+                    <div class="card">
+                        <div class="card-body">
+                            <h6>Prêt pour la Présentation</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>Dashboard interactif</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Gestion de projets</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Tableaux Kanban</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Collaboration temps réel</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>TaskFlow Pro</h5>
+                    <p>Développé par Fitiavana RAMAHATRATRA</p>
+                    <p>Spécialisation: Développement d'applications web, logiciel et bases de données</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p><i class="fas fa-envelope me-2"></i>fitiavanaramahatratra@gmail.com</p>
+                    <p><i class="fas fa-phone me-2"></i>034 54 138 24</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function startDemo() {
+            alert('Démarrage de la démonstration TaskFlow Pro!\n\nServices disponibles:\n- Interface Web: http://localhost:3000\n- API Documentation: http://localhost:8080/swagger-ui\n- API Backend: http://localhost:8080\n\nUtilisez: docker-compose up -d');
+        }
+        
+        function showCode() {
+            alert('Code source disponible sur GitHub:\nhttps://github.com/PrayingGoat/taskflow-pro\n\nTechnologies démontrées:\n- Java/Spring Boot\n- PHP/Laravel\n- C#/.NET Core\n- Vue.js/TypeScript\n- PostgreSQL/MongoDB/Redis\n- Docker');
+        }
+        
+        // Animation des statistiques
+        function animateStats() {
+            const stats = document.querySelectorAll('.stat-number');
+            stats.forEach(stat => {
+                const target = stat.textContent;
+                const isNumber = !isNaN(parseInt(target));
+                if (isNumber) {
+                    let current = 0;
+                    const increment = parseInt(target) / 50;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= parseInt(target)) {
+                            stat.textContent = target;
+                            clearInterval(timer);
+                        } else {
+                            stat.textContent = Math.floor(current);
+                        }
+                    }, 50);
+                }
+            });
+        }
+        
+        // Déclencher l'animation au scroll
+        window.addEventListener('scroll', () => {
+            const statsSection = document.querySelector('.stats-section');
+            const rect = statsSection.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+                animateStats();
+            }
+        });
+    </script>
+</body>
+</html>

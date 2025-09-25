@@ -1,0 +1,151 @@
+version: '3.8'
+
+services:
+  # Base de données PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    container_name: taskflow-postgres
+    environment:
+      POSTGRES_DB: taskflow_db
+      POSTGRES_USER: taskflow_user
+      POSTGRES_PASSWORD: taskflow_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - taskflow-network
+
+  # Base de données MongoDB
+  mongodb:
+    image: mongo:7
+    container_name: taskflow-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: taskflow_user
+      MONGO_INITDB_ROOT_PASSWORD: taskflow_password
+      MONGO_INITDB_DATABASE: taskflow_analytics
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - taskflow-network
+
+  # Cache Redis
+  redis:
+    image: redis:7-alpine
+    container_name: taskflow-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - taskflow-network
+
+  # API Spring Boot (Java)
+  taskflow-api:
+    build:
+      context: ./backend/taskflow-api
+      dockerfile: Dockerfile
+    container_name: taskflow-api
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/taskflow_db
+      SPRING_DATASOURCE_USERNAME: taskflow_user
+      SPRING_DATASOURCE_PASSWORD: taskflow_password
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - taskflow-network
+
+  # Services Laravel (PHP)
+  taskflow-laravel:
+    build:
+      context: ./backend/taskflow-laravel
+      dockerfile: Dockerfile
+    container_name: taskflow-laravel
+    ports:
+      - "8000:8000"
+    environment:
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: taskflow_db
+      DB_USERNAME: taskflow_user
+      DB_PASSWORD: taskflow_password
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - taskflow-network
+
+  # Services .NET Core (C#)
+  taskflow-dotnet:
+    build:
+      context: ./backend/taskflow-dotnet
+      dockerfile: Dockerfile
+    container_name: taskflow-dotnet
+    ports:
+      - "5000:5000"
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=taskflow_db;Username=taskflow_user;Password=taskflow_password"
+      Redis__Host: redis
+      Redis__Port: 6379
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - taskflow-network
+
+  # Frontend Vue.js
+  taskflow-web:
+    build:
+      context: ./frontend/taskflow-web
+      dockerfile: Dockerfile
+    container_name: taskflow-web
+    ports:
+      - "3000:3000"
+    environment:
+      VUE_APP_API_URL: http://localhost:8080
+      VUE_APP_LARAVEL_URL: http://localhost:8000
+      VUE_APP_DOTNET_URL: http://localhost:5000
+    depends_on:
+      - taskflow-api
+      - taskflow-laravel
+      - taskflow-dotnet
+    networks:
+      - taskflow-network
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: taskflow-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/ssl:/etc/nginx/ssl
+    depends_on:
+      - taskflow-web
+      - taskflow-api
+      - taskflow-laravel
+      - taskflow-dotnet
+    networks:
+      - taskflow-network
+
+volumes:
+  postgres_data:
+  mongodb_data:
+  redis_data:
+
+networks:
+  taskflow-network:
+    driver: bridge
